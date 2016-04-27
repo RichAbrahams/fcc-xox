@@ -34,6 +34,8 @@ $(document).ready(function() {
   ];
 
 
+// Redraw board
+
   function refreshBoard() {
     for (i = 0; i < gameArray.length; i++) {
       if (gameArray[i] === 0) {
@@ -46,6 +48,8 @@ $(document).ready(function() {
     }
   }
 
+// returns array of empty positions
+
   function emptySquares(){
     var empty = 0;
     for (var i = 0; i < gameArray.length; i++){
@@ -55,6 +59,8 @@ $(document).ready(function() {
     }
     return empty;
   }
+
+// returns an array of specified player postions
 
   function changeChangetoBin(inputArray) {
     var cpuArray = [];
@@ -82,6 +88,8 @@ $(document).ready(function() {
     return output;
   }
 
+// performs bitwise operation to check for winner
+
   function checkWinner(inputArray, player) {
     var playerPositions = changeChangetoBin(inputArray);
     playerPositions = player === cpuPlayer ? playerPositions[0].join("").toString(2) : playerPositions[1].join("").toString(2);
@@ -93,11 +101,11 @@ $(document).ready(function() {
     return false;
   }
 
-  function aiMove(array, player) {
+// initiates computer move
 
+  function aiMove(array, player) {
     var board = array;
     var myplayer = player;
-
     var getValidMoves = function() {
       var available = [];
       if (checkWinner(board, cpuPlayer) !== false || checkWinner(board, humanPlayer) !== false) {
@@ -112,6 +120,8 @@ $(document).ready(function() {
       }
     };
 
+// returns minmax score for inputed board array
+
     function scoreBoard(inputArray) {
       var score = 0;
       for (var i = 0; i < winRows.length; i++) {
@@ -121,7 +131,6 @@ $(document).ready(function() {
         } else if (inputArray[winRows[i][0]] === humanPlayer) {
           rowScore = -1;
         }
-
         if (inputArray[winRows[i][1]] === cpuPlayer) {
           if (rowScore === 1) {
             rowScore = 10;
@@ -138,7 +147,6 @@ $(document).ready(function() {
             rowScore = -1;
           } else rowScore = 0;
         }
-
         if (inputArray[winRows[i][2]] === cpuPlayer)
           if (rowScore > 0) {
             rowScore *= 10;
@@ -160,6 +168,8 @@ $(document).ready(function() {
       return score;
     }
 
+// recursively generates potential moves, uses minimax to select best ai move
+
     function minimax(depth, player) {
       var nextMoves = getValidMoves();
       var best = (player === cpuPlayer) ? -1e100 : 1e100,
@@ -172,7 +182,6 @@ $(document).ready(function() {
         for (var i = nextMoves.length; i--;) {
           var m = nextMoves[i];
           board[m] = player;
-
           if (player === cpuPlayer) {
             current = minimax(depth - 1, humanPlayer)[0];
             if (current > best) {
@@ -227,6 +236,8 @@ $(document).ready(function() {
     }
   };
 
+// routes turns and checks if game ended
+
   function endTurn(player) {
     var won = checkWinner(gameArray, player);
     var empty = emptySquares();
@@ -241,6 +252,8 @@ $(document).ready(function() {
       gameWon(won);
     }
   }
+
+// generates winner animation
 
   function gameWon(winString) {
     var winArray = winString[0].split("");
@@ -265,6 +278,8 @@ $(document).ready(function() {
     endCover[0].classList.add("coverOn");
   }
 
+// generates game drawn animation
+
 function gameDrawn(){
   var n = 0;
   function highLight() {
@@ -280,6 +295,7 @@ function gameDrawn(){
   endCover[0].classList.add("coverOn");
 }
 
+// checks for input from player
 
   for (var i = 0; i < playerSelect.length; i++) {
     (function(index) {
